@@ -1,13 +1,20 @@
 // Requires
 var express = require('express');
 var mongoose = require('mongoose');
+var bodyParser = require('body-parser')
 
+//Import routes
+var appRoutes = require('./routes/app');
+var appUser = require('./routes/user');
+var loginRoutes = require('./routes/login');
 
-
-
-// Iicializar variables
+// Inicializar variables
 var app = express();
 
+//Body parser
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 
 // Conexión a la base de datos
@@ -19,16 +26,12 @@ mongoose.connection.openUri('mongodb://localhost:27017/projectDB', (err, res) =>
 
 });
 
-
 //Rutas
-app.get('/', (req, rest, next) => {
+app.use('/', appRoutes);
+app.use('/user', appUser);
+app.use('/login', loginRoutes);
 
-    rest.status(200).json({
-        ok: true,
-        message: 'Peticion realizada correctamente'
-    });
 
-});
 
 // Escuchar peticiones
 app.listen(3000, () => {
