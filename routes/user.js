@@ -7,7 +7,7 @@ var mdAutenticacion = require('../middlewares/autenticacion');
 var app = express();
 
 //Models
-var User = require('../models/usuario');
+var User = require('../models/user');
 
 // ===============================================
 // Obtener todos los ususarios
@@ -15,14 +15,26 @@ var User = require('../models/usuario');
 
 app.get('/', (req, res, next) => {
 
-    User.find({}, 'nombre email img role').exec(
-        (err, users) => {
-            if (err) {
-                res.status(500).json({ ok: false, message: 'Error al cargar usuarios.', errors: err });
-            } else {
-                res.status(200).json({ ok: true, users: users });
-            }
-        });
+    var skip = req.query.skip || 0;
+    skip = Number(skip);
+
+    User.find({}, 'name email img role')
+        .skip(skip)
+        .limit(5)
+        .exec(
+            (err, users) => {
+                if (err) {
+                    res.status(500).json({ ok: false, message: 'Error al cargar usuarios.', errors: err });
+                } else {
+                    User.count({}, (err, count) => {
+                        if (err) {
+                            res.status(500).json({ ok: false, message: 'Error al buscar el total de usuarios.', errors: err });
+                        } else {
+                            res.status(200).json({ ok: true, total: count, users: users });
+                        }
+                    })
+                }
+            });
 });
 
 // ===============================================
@@ -67,7 +79,7 @@ app.put('/:id', mdAutenticacion.verifyToken, (req, res) => {
         }
 
         if (!user) {
-            res.status(400).json({ ok: false, message: 'El usurio con la id: ' + id + ' no etiste.', errors: { message: 'No existe un usuario con ese ID.' } });
+            res.status(400).json({ ok: false, message: 'El usuario con la id: ' + id + ' no etiste.', errors: { message: 'No existe un usuario con ese ID.' } });
         } else {
             user.name = body.name;
             user.email = body.email;

@@ -7,7 +7,7 @@ var SEED = require('../config/config').SEED;
 var app = express();
 
 //Models
-var User = require('../models/usuario');
+var User = require('../models/user');
 
 // ===============================================
 // Login

@@ -6,7 +6,12 @@ var bodyParser = require('body-parser')
 //Import routes
 var appRoutes = require('./routes/app');
 var appUser = require('./routes/user');
+var appCompany = require('./routes/company');
+var appEmploye = require('./routes/employe')
 var loginRoutes = require('./routes/login');
+var searchRoutes = require('./routes/search');
+var uploadRoutes = require('./routes/upload');
+var imagesRoutes = require('./routes/images');
 
 // Inicializar variables
 var app = express();
@@ -27,9 +32,15 @@ mongoose.connection.openUri('mongodb://localhost:27017/projectDB', (err, res) =>
 });
 
 //Rutas
-app.use('/', appRoutes);
 app.use('/user', appUser);
+app.use('/company', appCompany);
+app.use('/employe', appEmploye);
 app.use('/login', loginRoutes);
+app.use('/search', searchRoutes);
+app.use('/upload', uploadRoutes);
+app.use('/img', imagesRoutes);
+
+app.use('/', appRoutes);
 
 
 
