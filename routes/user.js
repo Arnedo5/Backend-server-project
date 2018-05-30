@@ -49,7 +49,8 @@ app.post('/', mdAutenticacion.verifyToken, (req, res) => {
         email: body.email,
         password: bcrypt.hashSync(body.password, 10),
         img: body.img,
-        role: body.role
+        role: body.role,
+        google: body.google
     });
 
     user.save((err, userSaved) => {
